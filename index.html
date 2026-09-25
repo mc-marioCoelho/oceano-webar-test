@@ -3,31 +3,54 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste A-Frame - Mosaico WebAR</title>
-    <!-- Biblioteca A-Frame via CDN -->
+    <title>WebAR Mosaico do Oceano - Zapworks + A-Frame</title>
+
+    <!-- 1. Importar a biblioteca A-Frame -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+    <!-- 2. Importar o SDK Universal AR da Zapworks para A-Frame -->
+    <script src="https://libs.zappar.com/zappar-aframe/2.0.0/zappar-aframe.js"></script>
   </head>
-  <body style="margin: 0; overflow: hidden;">
-    <!-- Cena 3D do A-Frame -->
-    <a-scene>
-      <!-- Caixas de luz e ambiente -->
-      <a-sky color="#ECECF6"></a-sky>
+  <body>
+    <!-- A cena A-Frame configurada com a integração da Zappar -->
+    <a-scene embedded zappar-canvasswitch>
 
-      <!-- Objetos 3D de teste -->
-      <!-- Cubo vermelho -->
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      
-      <!-- Esfera verde -->
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      
-      <!-- Cilindro amarelo -->
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      
-      <!-- Chão -->
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <!-- Declaração de Ativos (Asset Management) -->
+      <a-assets>
+        <!-- Carregar o ficheiro de rastreio .zpt (Image Target do Mosaico) -->
+        <a-asset-item id="target-mosaico" src="./mosaico.zpt"></a-asset-item>
+      </a-assets>
 
-      <!-- Câmara básica -->
-      <a-camera position="0 1.6 0"></a-camera>
+      <!-- 3. Permissão e Controlo de Câmara do Zapworks -->
+      <a-entity zappar-permissions-ui id="permissions"></a-entity>
+      <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
+
+      <!-- Câmara de AR fornecida pela Zappar -->
+      <a-entity camera zappar-camera></a-entity>
+
+      <!-- 4. Âncora de Rastreio de Imagem (Image Target) -->
+      <!-- Tudo dentro deste nó fica fixo sobre o Mosaico quando detetado pela câmara -->
+      <a-entity zappar-image="target: #target-mosaico">
+
+        <!-- Exemplo de Conteúdo 3D sobreposto ao mosaico -->
+        
+        <!-- Cubo translúcido de teste -->
+        <a-box position="0 0.5 0" 
+               rotation="0 45 0" 
+               scale="0.8 0.8 0.8" 
+               material="color: #4CC3D9; opacity: 0.85;">
+        </a-box>
+
+        <!-- Anel / Moldura decorativa -->
+        <a-ring position="0 0.01 0" 
+                rotation="-90 0 0" 
+                radius-inner="0.6" 
+                radius-outer="0.8" 
+                color="#FFC65D">
+        </a-ring>
+
+      </a-entity>
+
     </a-scene>
   </body>
 </html>
