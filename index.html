@@ -76,25 +76,25 @@
   </head>
   <body>
 
-    <!-- Conteúdo do Artigo / Storytelling (Camida HTML) -->
+    <!-- Conteúdo do Artigo / Storytelling (Camada HTML) -->
     <div class="content-container">
       <h1>O Mosaico do Oceano: Narrativa e Memória</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       
       <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-      <!-- Ponto de Disparo 1 (Ex: Visualizar Geometria / Cubo) -->
+      <!-- Ponto de Disparo 1 (Visualizar o Deus Oceano) -->
       <button class="ar-trigger-btn" onclick="openAR('mode-1')">
-        📷 Abrir RA: Inspecionar Elemento 1
+        📷 Abrir RA: Inspecionar Deus Oceano
       </button>
 
       <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula.</p>
 
       <p>Donec lobortis risus a elit. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc.</p>
 
-      <!-- Ponto de Disparo 2 (Ex: Visualizar Anel / Detalhe) -->
+      <!-- Ponto de Disparo 2 (Visualizar Elemento Secundário) -->
       <button class="ar-trigger-btn" onclick="openAR('mode-2')">
-        📷 Abrir RA: Inspecionar Elemento 2
+        📷 Abrir RA: Inspecionar Moldura / Anel
       </button>
 
       <p>Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum.</p>
@@ -105,8 +105,14 @@
 
     <!-- Contentor da Cena A-Frame com Zappar -->
     <div id="ar-scene-container">
-      <a-scene embedded zappar-canvasswitch id="ar-scene">
+      <!-- vr-mode-ui="enabled: false" remove a interface de óculos VR -->
+      <a-scene embedded vr-mode-ui="enabled: false" zappar-canvasswitch id="ar-scene">
         
+        <a-assets>
+          <!-- Textura do Mosaico do Oceano para o primeiro botão -->
+          <img id="oceano-img" src="https://raw.githubusercontent.com/mc-marioCoelho/oceano-webar-test/main/mosaicoOceano_white_bg.jpg" crossorigin="anonymous">
+        </a-assets>
+
         <a-entity zappar-permissions-ui id="permissions"></a-entity>
         <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
         <a-entity camera zappar-camera></a-entity>
@@ -114,22 +120,32 @@
         <!-- Rastreio do Mosaico -->
         <a-entity zappar-image="target: ./mosaico.zpt">
           
-          <!-- Elemento 1 (Visível apenas na opção 1) -->
-          <a-box id="ar-element-1" 
-                 position="0 0.1 0" 
-                 rotation="0 45 0" 
-                 scale="0.2 0.2 0.2" 
-                 material="color: #4CC3D9; opacity: 0.85;">
-          </a-box>
+          <!-- Elemento 1: Reconstrução do Mosaico do Oceano (Plano 2D em 3D + Cubo Transparente) -->
+          <a-entity id="ar-element-1">
+            <a-plane position="0 0.02 0" 
+                     rotation="-90 0 0" 
+                     width="0.8" 
+                     height="1.2" 
+                     src="#oceano-img" 
+                     material="transparent: true; opacity: 0.95;">
+            </a-plane>
+            
+            <a-box position="0 0.15 0" 
+                   rotation="0 45 0" 
+                   scale="0.15 0.15 0.15" 
+                   material="color: #007bff; opacity: 0.6;">
+            </a-box>
+          </a-entity>
 
-          <!-- Elemento 2 (Visível apenas na opção 2) -->
-          <a-ring id="ar-element-2" 
-                  position="0 0.01 0" 
-                  rotation="-90 0 0" 
-                  radius-inner="0.2" 
-                  radius-outer="0.3" 
-                  color="#FFC65D">
-          </a-ring>
+          <!-- Elemento 2: Anel decorativo de teste -->
+          <a-entity id="ar-element-2">
+            <a-ring position="0 0.01 0" 
+                    rotation="-90 0 0" 
+                    radius-inner="0.25" 
+                    radius-outer="0.35" 
+                    color="#FFC65D">
+            </a-ring>
+          </a-entity>
 
         </a-entity>
 
@@ -144,7 +160,6 @@
         const elem1 = document.getElementById('ar-element-1');
         const elem2 = document.getElementById('ar-element-2');
 
-        // Alterna os elementos 3D com base no botão clicado no texto
         if (mode === 'mode-1') {
           elem1.setAttribute('visible', 'true');
           elem2.setAttribute('visible', 'false');
@@ -153,16 +168,19 @@
           elem2.setAttribute('visible', 'true');
         }
 
-        // Mostra o ecrã de RA e o botão de fechar
         arContainer.style.display = 'block';
         closeBtn.style.display = 'block';
+
+        // Recalcula as dimensões da câmara RA ao mostrar o container
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 100);
       }
 
       function closeAR() {
         const arContainer = document.getElementById('ar-scene-container');
         const closeBtn = document.getElementById('close-ar-btn');
 
-        // Esconde o ecrã de RA e volta à leitura da página
         arContainer.style.display = 'none';
         closeBtn.style.display = 'none';
       }
