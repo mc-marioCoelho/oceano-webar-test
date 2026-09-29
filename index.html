@@ -3,55 +3,169 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebAR Mosaico do Oceano - Zapworks + A-Frame</title>
+    <title>WebAR Mosaico do Oceano - Storytelling</title>
 
-    <!-- 1. Importar A-Frame -->
+    <!-- A-Frame & Zappar SDK -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-    <!-- 2. Importar o SDK Universal AR da Zapworks para A-Frame -->
     <script src="https://libs.zappar.com/zappar-aframe/2.0.0/zappar-aframe.js"></script>
 
     <style>
-      html, body {
+      body {
         margin: 0;
-        padding: 0;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f9f9f9;
+      }
+
+      /* Contentor do artigo / storytelling */
+      .content-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+      }
+
+      .ar-trigger-btn {
+        display: block;
         width: 100%;
-        height: 100%;
-        overflow: hidden;
+        padding: 15px;
+        margin: 30px 0;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+
+      .ar-trigger-btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* A-Scene escondida por omissão */
+      #ar-scene-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: none; /* Inicia oculto */
+      }
+
+      /* Botão para fechar a RA e voltar ao texto */
+      #close-ar-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        display: none;
       }
     </style>
   </head>
   <body>
-    <!-- A-Scene limpa a ocupar 100% do ecrã -->
-    <a-scene zappar-canvasswitch>
 
-      <!-- 3. Permissão e Controlo de Câmara -->
-      <a-entity zappar-permissions-ui id="permissions"></a-entity>
-      <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
+    <!-- Conteúdo do Artigo / Storytelling (Camida HTML) -->
+    <div class="content-container">
+      <h1>O Mosaico do Oceano: Narrativa e Memória</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-      <!-- Câmara de AR Zappar -->
-      <a-entity camera zappar-camera></a-entity>
+      <!-- Ponto de Disparo 1 (Ex: Visualizar Geometria / Cubo) -->
+      <button class="ar-trigger-btn" onclick="openAR('mode-1')">
+        📷 Abrir RA: Inspecionar Elemento 1
+      </button>
 
-      <!-- 4. Âncora de Rastreio com o caminho direto para mosaico.zpt -->
-      <a-entity zappar-image="target: ./mosaico.zpt">
+      <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula.</p>
 
-        <!-- Cubo translúcido de teste -->
-      <a-box position="0 0.1 0" 
-               rotation="0 45 0" 
-               scale="0.2 0.2 0.2" 
-               material="color: #4CC3D9; opacity: 0.85;">
-      </a-box>
+      <p>Donec lobortis risus a elit. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc.</p>
 
-        <!-- Anel decorativo -->
-       <a-ring position="0 0.01 0" 
-               rotation="-90 0 0" 
-               radius-inner="0.2" 
-               radius-outer="0.3" 
-               color="#FFC65D">
-      </a-ring>
+      <!-- Ponto de Disparo 2 (Ex: Visualizar Anel / Detalhe) -->
+      <button class="ar-trigger-btn" onclick="openAR('mode-2')">
+        📷 Abrir RA: Inspecionar Elemento 2
+      </button>
 
-      </a-entity>
+      <p>Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum.</p>
+    </div>
 
-    </a-scene>
+    <!-- Botão Fechar RA -->
+    <button id="close-ar-btn" onclick="closeAR()">✖ Fechar RA</button>
+
+    <!-- Contentor da Cena A-Frame com Zappar -->
+    <div id="ar-scene-container">
+      <a-scene embedded zappar-canvasswitch id="ar-scene">
+        
+        <a-entity zappar-permissions-ui id="permissions"></a-entity>
+        <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
+        <a-entity camera zappar-camera></a-entity>
+
+        <!-- Rastreio do Mosaico -->
+        <a-entity zappar-image="target: ./mosaico.zpt">
+          
+          <!-- Elemento 1 (Visível apenas na opção 1) -->
+          <a-box id="ar-element-1" 
+                 position="0 0.1 0" 
+                 rotation="0 45 0" 
+                 scale="0.2 0.2 0.2" 
+                 material="color: #4CC3D9; opacity: 0.85;">
+          </a-box>
+
+          <!-- Elemento 2 (Visível apenas na opção 2) -->
+          <a-ring id="ar-element-2" 
+                  position="0 0.01 0" 
+                  rotation="-90 0 0" 
+                  radius-inner="0.2" 
+                  radius-outer="0.3" 
+                  color="#FFC65D">
+          </a-ring>
+
+        </a-entity>
+
+      </a-scene>
+    </div>
+
+    <!-- Script de Controlo da Experiência -->
+    <script>
+      function openAR(mode) {
+        const arContainer = document.getElementById('ar-scene-container');
+        const closeBtn = document.getElementById('close-ar-btn');
+        const elem1 = document.getElementById('ar-element-1');
+        const elem2 = document.getElementById('ar-element-2');
+
+        // Alterna os elementos 3D com base no botão clicado no texto
+        if (mode === 'mode-1') {
+          elem1.setAttribute('visible', 'true');
+          elem2.setAttribute('visible', 'false');
+        } else if (mode === 'mode-2') {
+          elem1.setAttribute('visible', 'false');
+          elem2.setAttribute('visible', 'true');
+        }
+
+        // Mostra o ecrã de RA e o botão de fechar
+        arContainer.style.display = 'block';
+        closeBtn.style.display = 'block';
+      }
+
+      function closeAR() {
+        const arContainer = document.getElementById('ar-scene-container');
+        const closeBtn = document.getElementById('close-ar-btn');
+
+        // Esconde o ecrã de RA e volta à leitura da página
+        arContainer.style.display = 'none';
+        closeBtn.style.display = 'none';
+      }
+    </script>
   </body>
 </html>
