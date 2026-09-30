@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebAR - Restauro da Barba do Oceano</title>
 
-    <!-- A-Frame & Zappar SDK -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- Versões perfeitamente compatíveis do A-Frame e Zappar SDK -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://libs.zappar.com/zappar-aframe/2.0.0/zappar-aframe.js"></script>
 
     <style>
@@ -39,15 +39,16 @@
       Aponte a câmara para a máscara do Deus Oceano
     </div>
 
-    <a-scene embedded vr-mode-ui="enabled: false" zappar-canvasswitch>
+    <!-- Cena A-Frame Zappar -->
+    <a-scene embedded vr-mode-ui="enabled: false">
 
       <a-assets>
-        <!-- Nome corrigido para coincidir exatamente com o GitHub -->
         <img id="barba-png" src="./lacuna-barba.png" crossorigin="anonymous">
       </a-assets>
 
       <a-entity zappar-permissions-ui id="permissions"></a-entity>
       <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
+      
       <a-entity camera zappar-camera></a-entity>
 
       <!-- Ficheiro ZPT gerado no Colab -->
