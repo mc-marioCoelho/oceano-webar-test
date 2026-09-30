@@ -3,55 +3,77 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebAR Mosaico do Oceano - Zapworks + A-Frame</title>
+    <title>WebAR - Restauro da Barba do Oceano</title>
 
-    <!-- 1. Importar A-Frame -->
+    <!-- A-Frame & Zappar SDK -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-    <!-- 2. Importar o SDK Universal AR da Zapworks para A-Frame -->
     <script src="https://libs.zappar.com/zappar-aframe/2.0.0/zappar-aframe.js"></script>
 
     <style>
-      html, body {
+      body {
         margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
         overflow: hidden;
+      }
+
+      /* Mensagem de instrução no ecrã */
+      #instructions-overlay {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
-    <!-- A-Scene limpa a ocupar 100% do ecrã -->
-    <a-scene zappar-canvasswitch>
 
-      <!-- 3. Permissão e Controlo de Câmara -->
+    <!-- Interface com instruções -->
+    <div id="instructions-overlay">
+      Aponte a câmara para a máscara do Deus Oceano
+    </div>
+
+    <!-- Cena A-Frame com Zappar (Sem modo VR) -->
+    <a-scene embedded vr-mode-ui="enabled: false" zappar-canvasswitch>
+
+      <a-assets>
+        <!-- Ficheiro PNG com transparência da recomposição da barba -->
+        <img id="barba-png" src="./barba_lacuna.png" crossorigin="anonymous">
+      </a-assets>
+
+      <!-- Interfaces de permissão e compatibilidade do Zappar -->
       <a-entity zappar-permissions-ui id="permissions"></a-entity>
       <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
-
-      <!-- Câmara de AR Zappar -->
+      
+      <!-- Câmara WebAR do Zappar -->
       <a-entity camera zappar-camera></a-entity>
 
-      <!-- 4. Âncora de Rastreio com o caminho direto para mosaico.zpt -->
-      <a-entity zappar-image="target: ./mosaico.zpt">
+      <!-- Rastreio do Ficheiro .ZPT gerado no Colab -->
+      <a-entity zappar-image="target: ./mascara_oceano.zpt">
 
-        <!-- Cubo translúcido de teste -->
-      <a-box position="0 0.1 0" 
-               rotation="0 45 0" 
-               scale="0.2 0.2 0.2" 
-               material="color: #4CC3D9; opacity: 0.85;">
-      </a-box>
-
-        <!-- Anel decorativo -->
-       <a-ring position="0 0.01 0" 
-               rotation="-90 0 0" 
-               radius-inner="0.2" 
-               radius-outer="0.3" 
-               color="#FFC65D">
-      </a-ring>
+        <!-- 
+          Plano 2D em RA com a reconstituição da barba.
+          position="0 0 0.005" eleva ligeiramente para evitar flutuação/cintilação (z-fighting).
+        -->
+        <a-plane position="0 0 0.005" 
+                 rotation="0 0 0" 
+                 width="1" 
+                 height="1" 
+                 src="#barba-png" 
+                 material="transparent: true; opacity: 1.0; alphaTest: 0.5; depthTest: true;">
+        </a-plane>
 
       </a-entity>
 
     </a-scene>
+
   </body>
 </html>
