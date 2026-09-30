@@ -15,7 +15,6 @@
         overflow: hidden;
       }
 
-      /* Mensagem de instrução no ecrã */
       #instructions-overlay {
         position: fixed;
         bottom: 25px;
@@ -36,33 +35,24 @@
   </head>
   <body>
 
-    <!-- Interface com instruções -->
     <div id="instructions-overlay">
       Aponte a câmara para a máscara do Deus Oceano
     </div>
 
-    <!-- Cena A-Frame com Zappar (Sem modo VR) -->
     <a-scene embedded vr-mode-ui="enabled: false" zappar-canvasswitch>
 
       <a-assets>
-        <!-- Ficheiro PNG com transparência da recomposição da barba -->
+        <!-- Nome corrigido para coincidir exatamente com o GitHub -->
         <img id="barba-png" src="./lacuna-barba.png" crossorigin="anonymous">
       </a-assets>
 
-      <!-- Interfaces de permissão e compatibilidade do Zappar -->
       <a-entity zappar-permissions-ui id="permissions"></a-entity>
       <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
-      
-      <!-- Câmara WebAR do Zappar -->
       <a-entity camera zappar-camera></a-entity>
 
-      <!-- Rastreio do Ficheiro .ZPT gerado no Colab -->
+      <!-- Ficheiro ZPT gerado no Colab -->
       <a-entity zappar-image="target: ./mascara_oceano.zpt">
 
-        <!-- 
-          Plano 2D em RA com a reconstituição da barba.
-          position="0 0 0.005" eleva ligeiramente para evitar flutuação/cintilação (z-fighting).
-        -->
         <a-plane position="0 0 0.005" 
                  rotation="0 0 0" 
                  width="1" 
